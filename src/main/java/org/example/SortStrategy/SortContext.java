@@ -7,7 +7,9 @@ import java.util.List;
 public class SortContext {
     private SortStrategy strategy;
 
-    public SortContext(){};
+    public SortContext(){
+
+    };
     public SortContext(SortStrategy initialStrategy) {
         this.strategy = initialStrategy;
     }
