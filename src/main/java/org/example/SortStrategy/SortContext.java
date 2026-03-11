@@ -20,7 +20,7 @@ public class SortContext {
         if (strategy != null){
             strategy.sort(users);
         } else {
-            throw new IllegalStateException("Стратегия сортировки не установлена!");
+            throw new IllegalStateException("Прошу установить стратегию сортировки!");
         }
     }
 
