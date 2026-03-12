@@ -1,4 +1,4 @@
-package org.example.SortStrategy.Entity;
+package org.example.Entity;
 
 import java.util.Objects;
 

@@ -1,6 +1,6 @@
 package org.example.SortStrategy;
 
-import org.example.SortStrategy.Entity.User;
+import org.example.Entity.User;
 
 
 import java.util.List;
