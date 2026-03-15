@@ -13,26 +13,42 @@ public class ManualData implements Data {
         List<User> list = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            System.out.println("Введите имя:");
-            String inputname;
 
+            System.out.println("Введите имя:");
+            String inputName;
             while (true) {
-                inputname = scanner.nextLine().trim();
-                if (inputname.matches("[a-zA-Zа-яА-Я]+")) {
-                    break;
-                }
+                inputName = scanner.nextLine().trim();
+                if (inputName.matches("[a-zA-Zа-яА-Я]+")) break;
                 System.out.println("Ошибка: можно вводить только буквы. Попробуйте снова.");
             }
-            System.out.print("Введите свой Email: ");
-            System.out.println("Введите свой ID:");
+
+            System.out.println("Введите email:");
+            String inputEmail;
+            while (true) {
+                inputEmail = scanner.nextLine().trim();
+                if (inputEmail.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) break;
+                System.out.println("Ошибка: некорректный email. Попробуйте снова.");
+            }
+
+            System.out.println("Введите ID (число):");
+            long inputId;
+            while (true) {
+                String line = scanner.nextLine().trim();
+                try {
+                    inputId = Long.parseLong(line);
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Ошибка: ID должен быть числом. Попробуйте снова.");
+                }
+            }
             try {
                 list.add(new User.builder()
-                        .setName(inputname)
-                        //.setEmail(inputemail)
-                        //.setId(inputeid)
+                        .setName(inputName)
+                        .setEmail(inputEmail)
+                        .setId(inputId)
                         .build());
             } catch (Exception e) {
-                System.out.println("Ошибка: " + e.getMessage());
+                System.out.println("Ошибка создания пользователя: " + e.getMessage());
                 i--;
             }
         }
