@@ -1,3 +1,8 @@
-саша,45,6124
-лёша,67,5678
-ваня,87,4567
+саша,Sasha@mail.ru,7887527867
+лёша,Lyosha@mail.ru,1352378582
+ваня,Vanya@mail.ru,1669998068
+маша,Masha@mail.ru,1928374650
+петя,Petr@yandex.ru,5647382910
+катя,Katya@gmail.com,9988776655
+дима,Dima@bk.ru,4433221100
+света,Sveta@mail.ru,7788990011
