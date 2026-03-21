@@ -13,5 +13,10 @@ public class OccurrenceCounter {
             System.out.println("Количество вхождений ID " + id + ": " + count);
         });
         t.start();
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
