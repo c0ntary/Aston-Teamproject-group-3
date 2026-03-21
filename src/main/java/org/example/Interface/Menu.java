@@ -1,10 +1,12 @@
 package org.example.Interface;
 
 import java.util.*;
-import org.example.Data.*;
-import org.example.SortStrategy.*;
+import java.io.*;
 import org.example.Entity.User;
 import org.example.Util.OccurrenceCounter;
+import org.example.SortStrategy.*;
+import org.example.Data.*;
+import org.example.Output.*;
 
 public class Menu {
 
@@ -24,6 +26,10 @@ public class Menu {
 
 				if (!handleMainMenu(input)) continue;
 				sortMenuLogic();
+
+				countOccurrencesMenu();
+				printWriteToFile();
+				saveInToFile(users);
 			}
 			catch (NumberFormatException e) {
 				System.out.println("Неверный формат числа");
@@ -56,8 +62,14 @@ public class Menu {
 		System.out.println("-------------------");
 	}
 
-	private boolean handleMainMenu(int input) {
-		Data provider = switch (input) {
+  private void printWriteToFile() {
+  	System.out.println("\nЗаписать отсортированный список в файл?");
+  	System.out.println("1. Да");
+  	System.out.println("2. Нет");
+  }
+
+  private boolean handleMainMenu(int input) {
+  	Data provider = switch (input) {
 			case 1 -> new FileData("src/main/java/org/example/Data/file_data.txt");
 			case 2 -> new RandomData();
 			case 3 -> new ManualData();
@@ -86,13 +98,13 @@ public class Menu {
 		};
 
 		if (strategy != null) {
-			strategy.sort(users);
-			printSorted(users);
-		}
-		else {
-			printNoNumber();
-			return true;
-		}
+    	strategy.sort(users);
+    	printSorted(users);
+    }
+    else {
+    	printNoNumber();
+    	return true;
+    }
 		return repeat;
 	}
 
@@ -101,16 +113,32 @@ public class Menu {
 			printSortMenu();
 			int sortChoice = Integer.parseInt(scanner.nextLine());
 			repeat = handleSortMenu(sortChoice, users);
-			countOccurrencesMenu();
 		} while (repeat);
 	}
 
 	private void printSorted(List<User> users) {
-		System.out.println("Отсортированный список:");
+		List<String> lines = formatUsers(users);
+		ConsoleOutput data = new ConsoleOutput();
+		data.output(lines);
+	}
+
+	private void saveInToFile(List<User> users) {
+		int printChoice = Integer.parseInt(scanner.nextLine());
+		List<String> lines = formatUsers(users);
+
+		if (printChoice == 1) {
+			WriteInFile data = new WriteInFile();
+			data.output(lines);
+		}
+	}
+
+	private List<String> formatUsers(List<User> users) {
+		List<String> lines = new ArrayList<>();
 
 		for (User user : users) {
-			System.out.println(user.getName() + " | " + user.getEmail() + " | " + user.getId());
+			lines.add(user.getName() + " | " + user.getEmail() + " | " + user.getId());
 		}
+		return lines;
 	}
 
 	private void countOccurrencesMenu() {
