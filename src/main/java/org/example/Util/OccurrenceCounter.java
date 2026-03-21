@@ -14,7 +14,7 @@ public class OccurrenceCounter {
         });
         t.start();
         try {
-            t.join();   // ← ЖДЁМ завершения потока
+            t.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
