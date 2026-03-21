@@ -1,9 +1,10 @@
 package org.example.Data;
+
 import org.example.Entity.User;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileData implements Data {
 
@@ -15,26 +16,34 @@ public class FileData implements Data {
 
     @Override
     public List<User> loadData(int count) {
-        List<User> list = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null && list.size() < count) {
-                String[] parts = line.split(",");
-                if (parts.length != 3) continue;
-
-                String name = parts[0].trim();
-                String email = parts[1].trim();
-                long id = Long.parseLong(parts[2].trim());
-
-                list.add(new User.builder()
-                        .setName(name)
-                        .setEmail(email)
-                        .setId(id)
-                        .build());
-            }
+            return br.lines()
+                    .limit(count)
+                    .map(this::parseUser)
+                    .filter(u -> u != null)
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             System.out.println("Ошибка чтения файла: " + e.getMessage());
+            return List.of();
         }
-        return list;
+    }
+    private User parseUser(String line) {
+        try {
+            String[] parts = line.split(",");
+            if (parts.length != 3) return null;
+            String name = parts[0].trim();
+            String email = parts[1].trim();
+            String idStr = parts[2].trim();
+            if (!name.matches("[a-zA-Zа-яА-Я]+")) return null;
+            if (!email.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) return null;
+            long id = Long.parseLong(idStr);
+            return new User.builder()
+                    .setName(name)
+                    .setEmail(email)
+                    .setId(id)
+                    .build();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
