@@ -1,8 +1,9 @@
 package org.example.Data;
+
 import org.example.Entity.User;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ManualData implements Data {
 
@@ -10,48 +11,41 @@ public class ManualData implements Data {
 
     @Override
     public List<User> loadData(int count) {
-        List<User> list = new ArrayList<>();
-
-        for (int i = 0; i < count; i++) {
-
-            System.out.println("Введите имя:");
-            String inputName;
-            while (true) {
-                inputName = scanner.nextLine().trim();
-                if (inputName.matches("[a-zA-Zа-яА-Я]+")) break;
-                System.out.println("Ошибка: можно вводить только буквы. Попробуйте снова.");
-            }
-
-            System.out.println("Введите email:");
-            String inputEmail;
-            while (true) {
-                inputEmail = scanner.nextLine().trim();
-                if (inputEmail.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) break;
-                System.out.println("Ошибка: некорректный email. Попробуйте снова.");
-            }
-
-            System.out.println("Введите ID (число):");
-            long inputId;
-            while (true) {
-                String line = scanner.nextLine().trim();
-                try {
-                    inputId = Long.parseLong(line);
-                    break;
-                } catch (NumberFormatException e) {
-                    System.out.println("Ошибка: ID должен быть числом. Попробуйте снова.");
-                }
-            }
+        return Stream.generate(this::readUser)
+                .limit(count)
+                .collect(Collectors.toList());
+    }
+    private User readUser() {
+        return new User.builder()
+                .setName(readName())
+                .setEmail(readEmail())
+                .setId(readId())
+                .build();
+    }
+    private String readName() {
+        System.out.println("Введите имя:");
+        while (true) {
+            String s = scanner.nextLine().trim();
+            if (s.matches("[a-zA-Zа-яА-Я]+")) return s;
+            System.out.println("Ошибка: только буквы.");
+        }
+    }
+    private String readEmail() {
+        System.out.println("Введите email:");
+        while (true) {
+            String s = scanner.nextLine().trim();
+            if (s.matches("^[\\w.-]+@[\\w.-]+\\.[A-Za-z]{2,6}$")) return s;
+            System.out.println("Ошибка: некорректный email.");
+        }
+    }
+    private long readId() {
+        System.out.println("Введите ID:");
+        while (true) {
             try {
-                list.add(new User.builder()
-                        .setName(inputName)
-                        .setEmail(inputEmail)
-                        .setId(inputId)
-                        .build());
+                return Long.parseLong(scanner.nextLine().trim());
             } catch (Exception e) {
-                System.out.println("Ошибка создания пользователя: " + e.getMessage());
-                i--;
+                System.out.println("Ошибка: ID должен быть числом.");
             }
         }
-        return list;
     }
 }

@@ -1,16 +1,21 @@
 package org.example.Interface;
+
 import java.util.*;
-import org.example.Data.*;
-import org.example.SortStrategy.*;
+import java.io.*;
 import org.example.Entity.User;
+import org.example.Util.OccurrenceCounter;
+import org.example.SortStrategy.*;
+import org.example.Data.*;
+import org.example.Output.*;
 
 public class Menu {
+
 	private final Scanner scanner = new Scanner(System.in);
 	private boolean repeat;
 	private List<User> users = new ArrayList<>();
 
 	public void start() {
-		while (true){
+		while (true) {
 			printMainMenu();
 
 			try {
@@ -21,6 +26,10 @@ public class Menu {
 
 				if (!handleMainMenu(input)) continue;
 				sortMenuLogic();
+
+				countOccurrencesMenu();
+				printWriteToFile();
+				saveInToFile(users);
 			}
 			catch (NumberFormatException e) {
 				System.out.println("Неверный формат числа");
@@ -28,18 +37,18 @@ public class Menu {
 		}
 	}
 
-	private void printMainMenu(){
-  	System.out.println("\nМЕНЮ");
-  	System.out.println("1. Загрузить данные из файла");
-  	System.out.println("2. Сгенерировать случайные данные");
-  	System.out.println("3. Ввести данные вручную");
-  	System.out.println("4. Выход");
-  	System.out.println("\nСделайте выбор:");
-  }
+	private void printMainMenu() {
+		System.out.println("\nМЕНЮ");
+		System.out.println("1. Загрузить данные из файла");
+		System.out.println("2. Сгенерировать случайные данные");
+		System.out.println("3. Ввести данные вручную");
+		System.out.println("4. Выход");
+		System.out.println("\nСделайте выбор:");
+	}
 
-  private void printNumberOfElements(){
-  	System.out.println("Введите количество элементов:");
-  }
+	private void printNumberOfElements() {
+		System.out.println("Введите количество элементов:");
+	}
 
   private void printSortMenu() {
   	System.out.println("Выберите сортировку:");
@@ -49,9 +58,10 @@ public class Menu {
 	System.out.println("4. По четным ID");// Доп. Задание 1
   }
 
-  private void printNoNumber() {
-  	System.out.println("Такого значения нет");
-    System.out.println("-------------------");
+  private void printWriteToFile() {
+  	System.out.println("\nЗаписать отсортированный список в файл?");
+  	System.out.println("1. Да");
+  	System.out.println("2. Нет");
   }
 
   private boolean handleMainMenu(int input) {
@@ -68,13 +78,14 @@ public class Menu {
 			return true;
 		}
 		else {
-  		printNoNumber();
-			return false;	
+			printNoNumber();
+			return false;
 		}
 	}
 
-  private boolean handleSortMenu(int sortChoice, List<User> users) {
+	private boolean handleSortMenu(int sortChoice, List<User> users) {
 		repeat = false;
+
 		SortStrategy strategy = switch (sortChoice) {
 			case 1 -> new NameSortStrategy();
 			case 2 -> new EmailSortStrategy();
@@ -84,8 +95,8 @@ public class Menu {
 		};
 
 		if (strategy != null) {
-      strategy.sort(users);
-      printSorted(users);
+    	strategy.sort(users);
+    	printSorted(users);
     }
     else {
     	printNoNumber();
@@ -99,15 +110,43 @@ public class Menu {
 			printSortMenu();
 			int sortChoice = Integer.parseInt(scanner.nextLine());
 			repeat = handleSortMenu(sortChoice, users);
-		}
-		while(repeat);
+		} while (repeat);
 	}
 
 	private void printSorted(List<User> users) {
-  	System.out.println("Отсортированный список:");
-	
+		List<String> lines = formatUsers(users);
+		ConsoleOutput data = new ConsoleOutput();
+		data.output(lines);
+	}
+
+	private void saveInToFile(List<User> users) {
+		int printChoice = Integer.parseInt(scanner.nextLine());
+		List<String> lines = formatUsers(users);
+
+		if (printChoice == 1) {
+			WriteInFile data = new WriteInFile();
+			data.output(lines);
+		}
+	}
+
+	private List<String> formatUsers(List<User> users) {
+		List<String> lines = new ArrayList<>();
+
 		for (User user : users) {
-		  System.out.println( user.getName() + " | " + user.getEmail() + " | " + user.getId() );
+			lines.add(user.getName() + " | " + user.getEmail() + " | " + user.getId());
+		}
+		return lines;
+	}
+
+	private void countOccurrencesMenu() {
+		System.out.println("\nВведите ID для подсчёта вхождений:");
+
+		try {
+			long id = Long.parseLong(scanner.nextLine());
+			OccurrenceCounter.countOccurrences(users, id);
+		}
+		catch (NumberFormatException e) {
+			System.out.println("Ошибка: ID должен быть числом");
 		}
 	}
 }
