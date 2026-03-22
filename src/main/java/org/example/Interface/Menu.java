@@ -50,17 +50,13 @@ public class Menu {
 		System.out.println("Введите количество элементов:");
 	}
 
-	private void printSortMenu() {
-		System.out.println("Выберите сортировку:");
-		System.out.println("1. По имени");
-		System.out.println("2. По email");
-		System.out.println("3. По Id");
-	}
-
-	private void printNoNumber() {
-		System.out.println("Такого значения нет");
-		System.out.println("-------------------");
-	}
+  private void printSortMenu() {
+  	System.out.println("Выберите сортировку:");
+    System.out.println("1. По имени");
+    System.out.println("2. По email");
+    System.out.println("3. По Id");
+	System.out.println("4. По четным ID");// Доп. Задание 1
+  }
 
   private void printWriteToFile() {
   	System.out.println("\nЗаписать отсортированный список в файл?");
@@ -94,6 +90,7 @@ public class Menu {
 			case 1 -> new NameSortStrategy();
 			case 2 -> new EmailSortStrategy();
 			case 3 -> new IdSortStrategy();
+			case 4 -> new Even_Sort_Id();
 			default -> null;
 		};
 
