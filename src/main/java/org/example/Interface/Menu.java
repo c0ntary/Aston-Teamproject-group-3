@@ -46,6 +46,7 @@ public class Menu {
     System.out.println("1. По имени");
     System.out.println("2. По email");
     System.out.println("3. По Id");
+	System.out.println("4. По четным ID");// Доп. Задание 1
   }
 
   private void printNoNumber() {
@@ -78,6 +79,7 @@ public class Menu {
 			case 1 -> new NameSortStrategy();
 			case 2 -> new EmailSortStrategy();
 			case 3 -> new IdSortStrategy();
+			case 4 -> new Even_Sort_Id();
 			default -> null;
 		};
 
