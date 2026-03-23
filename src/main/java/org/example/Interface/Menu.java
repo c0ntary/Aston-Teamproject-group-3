@@ -149,4 +149,9 @@ public class Menu {
 			System.out.println("Ошибка: ID должен быть числом");
 		}
 	}
+private void printNoNumber() {
+		System.out.println("Такого значения нет");
+		System.out.println("-------------------");
+	}
+
 }
