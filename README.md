@@ -175,3 +175,51 @@ AllTests
     testFileData() - загружает из файла, проверяет количество и структуру данных
     testRandomData() - генерирует случайных пользователей, проверяет количество и валидность
     testManualData() - только создает экземпляр (т.к. требует ручного ввода)
+
+
+Функции:
+Загрузка данных
+Menu.handleMainMenu()
+    switch(input)
+       case 1 → new FileData(".../file_data.txt")
+       case 2 → new RandomData()
+       case 3 → new ManualData()
+    count = Integer.parseInt(scanner.nextLine())
+    users = provider.loadData(count)
+    return true
+
+Сортировка 
+Menu.sortMenuLogic()
+    printSortMenu() → показывает 4 пункта
+    sortChoice = Integer.parseInt(scanner.nextLine())
+    handleSortMenu(sortChoice, users)
+        switch(sortChoice)
+           case 1 → new NameSortStrategy()
+           case 2 → new EmailSortStrategy()
+           case 3 → new IdSortStrategy()
+           case 4 → new Even_Sort_Id()
+        strategy.sort(users)
+           Для NameSortStrategy: пузырьковая сортировка по имени
+           Для EmailSortStrategy: пузырьковая сортировка по email
+           Для IdSortStrategy: пузырьковая сортировка по id
+           Для Even_Sort_Id:
+                Отбор пользователей с четным id
+                Сохранение их индексов
+                Сортировка четных пользователей по id
+                Вставка обратно на исходные позиции
+        printSorted(users)
+            ConsoleOutput.output()
+
+Подсчет вхождений
+Menu.countOccurrencesMenu()
+    OccurrenceCounter.countOccurrences(users, id)
+         new Thread(()
+            stream().filter(u → u.getId() == id).count()
+            System.out.println()
+
+Сохранение в файл
+Menu.saveInToFile()
+    if (printChoice == 1)
+        WriteInFile.output(lines)
+            BufferedWriter → "src/main/java/org/example/Data/output.txt"
+                append mode (true) → данные дописываются
